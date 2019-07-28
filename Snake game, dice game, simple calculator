@@ -1,0 +1,235 @@
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+#include <cmath>
+using namespace std;
+bool gameOver;
+const int lebar = 20;
+const int tinggi = 20;
+int x, y, buahx, buahy, score;
+int buntutx[100], buntuty[100];
+int nbuntut;
+enum eDirecton { STOP = 0, LEFT, RIGHT, UP, DOWN };
+eDirecton dir;
+void Setup()
+{
+	gameOver = false;
+	dir = STOP;
+	x = lebar / 2;
+	y = tinggi / 2;
+	buahx = rand() % lebar;
+	buahy = rand() % tinggi;
+	score = 0;
+}
+void Draw()
+{
+	system("cls"); //system("clear");
+	for (int i = 0; i < lebar + 2; i++)
+		cout << "#";
+	cout << endl;
+
+	for (int i = 0; i < tinggi; i++)
+	{
+		for (int j = 0; j < lebar; j++)
+		{
+			if (j == 0)
+				cout << "#";
+			if (i == y && j == x)
+				cout << "O";
+			else if (i == buahy && j == buahx)
+				cout << "F";
+			else
+			{
+				bool print = false;
+				for (int k = 0; k < nbuntut; k++)
+				{
+					if (buntutx[k] == j && buntuty[k] == i)
+					{
+						cout << "o";
+						print = true;
+					}
+				}
+				if (!print)
+					cout << " ";
+			}
+
+
+			if (j == lebar - 1)
+				cout << "#";
+		}
+		cout << endl;
+	}
+
+	for (int i = 0; i < lebar + 2; i++)
+		cout << "#";
+	cout << endl;
+	cout << "Score:" << score << endl;
+}
+void Input()
+{
+	if (_kbhit())
+	{
+		switch (_getch())
+		{
+		case 'a':
+			dir = LEFT;
+			break;
+		case 'd':
+			dir = RIGHT;
+			break;
+		case 'w':
+			dir = UP;
+			break;
+		case 's':
+			dir = DOWN;
+			break;
+		case 'x':
+			gameOver = true;
+			break;
+		}
+	}
+}
+void Logic()
+{
+	int prevX = buntutx[0];
+	int prevY = buntuty[0];
+	int prev2X, prev2Y;
+	buntutx[0] = x;
+	buntuty[0] = y;
+	for (int i = 1; i < nbuntut; i++)
+	{
+		prev2X = buntutx[i];
+		prev2Y = buntuty[i];
+		buntutx[i] = prevX;
+		buntuty[i] = prevY;
+		prevX = prev2X;
+		prevY = prev2Y;
+	}
+	switch (dir)
+	{
+	case LEFT:
+		x--;
+		break;
+	case RIGHT:
+		x++;
+		break;
+	case UP:
+		y--;
+		break;
+	case DOWN:
+		y++;
+		break;
+	default:
+		break;
+	}
+	if (x > lebar || x < 0 || y > tinggi || y < 0) {
+		cout << endl << endl << endl << " YAH KALAH -__- T_T skor anda :  " << score << endl;
+		gameOver = true;
+	}
+	
+	if (x >= lebar) x = 0; else if (x < 0) x = lebar - 1;
+	if (y >= tinggi) y = 0; else if (y < 0) y = tinggi - 1;
+
+	for (int i = 0; i < nbuntut; i++)
+		if (buntutx[i] == x && buntuty[i] == y)
+			gameOver = true;
+
+	if (x == buahx && y == buahy)
+	{
+		score += 10;
+		buahx = rand() % lebar;
+		buahy = rand() % tinggi;
+		nbuntut++;
+	}
+}
+int main()
+{
+	Setup();
+	while (!gameOver)
+	{
+		Draw();
+		Input();
+		Logic();
+		Sleep(50); 
+	}
+	
+	cout << endl << " SELAMAT DATANG DIGAME DADU SALMAN" << endl;
+	char dadu;
+	while (true) {
+		cout << " ketik y atau n untuk melempar dadu : ";
+		cin >> dadu;
+		
+		if (dadu == 'y') {
+			cout << 1 + (rand() % 12) << endl;
+		}
+		else if (dadu == 'n') {
+			cout << " TERIMAKASIH TELAH MEMAINKAN DADU :D " << endl;
+			break;
+		}
+		else {
+			cout << " WARNING : KETIK Y ATAU N DONG KAKAK !!! NANTI AKU MARA NI !!" << endl;
+		}
+		
+		
+	}
+
+	double nilai1, nilai2, hasil;
+	char simbol;
+	while (true) {
+		cout << endl << " SELAMAT DATANG DIKALKULATOR SALMAN " << endl;
+		cout << " TOLONG KETIK N DI KOLOM SIMBOL JIKA INGIN BERHENTI " << endl;
+		cout << " MASUKAN SIMBOL : UNTUK MASUK KE KOLOM A / C , SIMBOL KODE : a = kuadrat , c = cosinus " << endl;
+		cout << " ISI NILAI PERTAMA DAN KEDUA UNTUK PROSES KUADRAT DAN COS " << endl;
+		cout << " MASUKAN NILAI PERTAMA : ";
+		cin >> nilai1;
+		cout << " PILIH OPERATOR YANG TERSEDIA : + , - , * , / , a , c : ";
+		cin >> simbol;
+		cout << " Masukan nilai kedua : ";
+		cin >> nilai2;
+
+		if (simbol == '+') {
+			hasil = nilai1 + nilai2;
+			cout << " hasilnya adalah : " << hasil << endl;
+		}
+		else if (simbol == '-') {
+			hasil = nilai1 - nilai2;
+			cout << " hasilnya adalah : " << hasil << endl;
+		}
+		else if (simbol == '*') {
+			hasil = nilai1 * nilai2;
+			cout << " hasilnya adalah : " << hasil << endl;
+		}
+		else if (simbol == '/') {
+			hasil = nilai1 / nilai2;
+			cout << " hasilnya adalah : " << hasil << endl;
+		}
+		else if (simbol == 'n') {
+			cout << " TERIMAKASIH TELAH MENGGUNAKAN PROGRAM SALMAN " << endl;
+			break;
+		}
+		else if (simbol == 'a') {
+			double m;
+			cout << "Menghitung akar nilai : \n";
+			cin >> m;
+
+			cout << "Akar kuadrat : \n" << sqrt(m) << endl;
+		}
+		else if (simbol == 'c') {
+			double n;
+			cout << "Menghitung nilai cos dari : \n";
+			cin >> n;
+
+			cout << "nilai cos adalah: \n" << cos(n) << endl;
+		}
+		else {
+			cout << " WARNING :  OPERATOR TIDAK TERSEDIA , HARAP GUNAKAN YANG ADA !" << endl;
+		}
+		
+	}
+
+	
+	cin.get();
+	cin.ignore();
+	return 0;
+	
+}
